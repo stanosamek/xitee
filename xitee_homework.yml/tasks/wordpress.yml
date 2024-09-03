@@ -1,0 +1,6 @@
+---
+- name: Create project directory
+  ansible.builtin.file:
+    path: "{{ project_dir }}"
+    state: directory
+    mode: '0755'

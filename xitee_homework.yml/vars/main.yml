@@ -8,3 +8,9 @@ firewall:
   - http
   - ssh
 
+wordpress_db_name: wordpress
+wordpress_db_user: wordpress_user
+wordpress_db_password: wordpress_password
+mysql_root_password: root_password
+docker_compose_version: "1.29.2"  # Replace with the desired Docker Compose version
+project_dir: /opt/wordpress_docker
