@@ -12,7 +12,7 @@
 - name: Set the password for the user
   ansible.builtin.user:
     name: xitest        
-    password: "{{ 'YourSecurePassword' | password_hash('sha512') }}" 
+    password: "{{ 'user_password' | password_hash('sha512') }}" 
     update_password: on_create
 
 - name: Ensure the .ssh directory exists
