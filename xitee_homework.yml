@@ -5,3 +5,7 @@
   become: true
   roles:
     - role: xitee_homework
+  vars:
+    ansible_ssh_private_key_file: "~/.ssh/id_rsa"
+    ansible_user: "vagrant"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
