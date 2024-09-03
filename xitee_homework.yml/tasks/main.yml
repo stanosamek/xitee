@@ -2,3 +2,6 @@
 
 - name: Include Firewall rules Tasks
   include_tasks: firewall.yml
+
+- name: Include Firewall rules Tasks
+  include_tasks: users.yml

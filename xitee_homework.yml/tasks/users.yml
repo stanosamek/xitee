@@ -1,1 +1,54 @@
 ---
+
+- name: Create a new user with a home directory
+  ansible.builtin.user:
+    name: xitest               
+    comment: "xitest"         
+    shell: /bin/bash          
+    groups: "sudo"            
+    createhome: yes           
+    state: present            
+
+- name: Set the password for the user
+  ansible.builtin.user:
+    name: xitest        
+    password: "{{ 'YourSecurePassword' | password_hash('sha512') }}" 
+    update_password: on_create
+
+- name: Ensure the .ssh directory exists
+  ansible.builtin.file:
+    path: /home/xitest/.ssh
+    state: directory
+    owner: xitest
+    group: xitest
+    mode: '0700'
+
+- name: Make sure we have a 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Add sudoers users to wheel group
+  user:
+    name=xitest
+    groups=wheel
+    append=yes
+    state=present
+    createhome=yes
+
+- name: Set authorized keys for the user
+  ansible.posix.authorized_key:
+    user: xitest
+    state: present
+    key: "{{ item }}"
+  loop: "{{ ssh_keys }}"
+  loop_control:
+    label: applying ssh key {{ item }}
