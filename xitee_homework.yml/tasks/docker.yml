@@ -1,0 +1,44 @@
+---
+- name: Ensure required packages are installed
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+- name: Add Docker repository
+  ansible.builtin.yum_repository:
+    name: docker
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: Install Docker CE
+  ansible.builtin.yum:
+    name: docker-ce
+    state: present
+
+- name: Start and enable Docker service
+  ansible.builtin.systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Add user to the docker group (optional)
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: yes
+  when: ansible_user_id != 'root'
+
+- name: Ensure Docker is installed and running
+  ansible.builtin.command:
+    cmd: docker --version
+  register: docker_version
+
+- name: Display Docker version
+  ansible.builtin.debug:
+    msg: "Docker version installed: {{ docker_version.stdout }}"
