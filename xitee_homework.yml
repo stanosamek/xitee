@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
-  gather_facts: true
+  gather_facts: false
   hosts: all
   become: true
   roles:
-    - { role: xitee_homework }
+    - role: xitee_homework
