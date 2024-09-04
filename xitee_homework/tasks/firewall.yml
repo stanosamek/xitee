@@ -13,7 +13,7 @@
 
 - name: Allow specific port through the firewall
   ansible.builtin.firewalld:
-    port: "{{ item }}" 
+    service: "{{ item }}" 
     permanent: yes
     state: enabled
     immediate: yes
