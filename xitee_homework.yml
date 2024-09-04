@@ -5,3 +5,5 @@
   become: true
   roles:
     - role: xitee_homework
+  vars_files:
+    - vault.yml

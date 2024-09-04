@@ -1,9 +1,5 @@
 ---
 
-ssh_keys:
-  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH/TlOb8TAXiMhN8u7VNqPC7W2hrhygm/1BZBZZp0qo marek@GUADALAJARA-WSL"
-  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP7FHrfu37DbzYBs6T3P/aq+XOeJAtu8Ftl1/3g1EN/K tkuba"
-
 firewall:
   - http
   - ssh
@@ -15,3 +11,20 @@ wordpress_db_password: wordpress_password
 mysql_root_password: root_password
 docker_compose_version: "1.29.2"  # Replace with the desired Docker Compose version
 project_dir: /opt/wordpress_docker
+wordpress_db_container_name: mysql
+wordpress_app_container_name: wordpress
+
+packages:
+  - jq
+  - python3-pip
+
+schedule_times:
+  - name: backup01
+    hour: "08"
+    minute: "00"
+  - name: backup02
+    hour: "16"
+    minute: "00"
+  - name: backup03
+    hour: "00"
+    minute: "00"

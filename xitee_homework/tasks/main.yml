@@ -10,4 +10,4 @@
   include_tasks: docker.yml
 
 - name: Ensure wordpress is installed and running
-  include_tasks: docker.yml
+  include_tasks: wordpress.yml

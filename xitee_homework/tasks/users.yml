@@ -40,7 +40,7 @@
   ansible.posix.authorized_key:
     user: "{{ username }}"
     state: present
-    key: "{{ item }}"
-  loop: "{{ ssh_keys }}"
+    key: "{{ item.public_key }}"
+  with_items: "{{ users }}"
   loop_control:
-    label: applying ssh key {{ item }}
+    label: "{{ item.username }}"
