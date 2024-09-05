@@ -1,0 +1,13 @@
+---
+
+- name: Ensure firewall is up and running
+  include_tasks: firewall.yml
+
+- name: Ensure users are created
+  include_tasks: users.yml
+
+- name: Ensure docker is installed and running
+  include_tasks: docker.yml
+
+- name: Ensure wordpress is installed and running
+  include_tasks: wordpress.yml

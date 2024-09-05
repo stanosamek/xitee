@@ -1,0 +1,25 @@
+---
+
+- name: Install firewalld
+  ansible.builtin.yum:
+    name: firewalld
+    state: present
+
+- name: Ensure firewalld is started and enabled at boot
+  ansible.builtin.systemd:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: Allow specific port through the firewall
+  ansible.builtin.firewalld:
+    service: "{{ item }}" 
+    permanent: yes
+    state: enabled
+    immediate: yes
+  loop: "{{ firewall }}"
+
+- name: Reload firewalld to apply changes
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded

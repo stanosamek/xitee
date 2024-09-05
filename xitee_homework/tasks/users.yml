@@ -1,0 +1,46 @@
+---
+
+- name: Make sure we have a 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Create a new user with a home directory
+  ansible.builtin.user:
+    name: "{{ username }}"             
+    comment: "homework user"         
+    shell: /bin/bash          
+    groups: "wheel"            
+    createhome: yes           
+    state: present            
+
+- name: Set the password for the user
+  ansible.builtin.user:
+    name: "{{ username }}"        
+    password: "{{ 'user_password' | password_hash('sha512') }}" 
+    update_password: on_create
+
+- name: Add sudoers users to wheel group
+  user:
+    name="{{ username }}"
+    groups=wheel
+    append=yes
+    state=present
+    createhome=yes
+
+- name: Set authorized keys for the user
+  ansible.posix.authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ item.public_key }}"
+  with_items: "{{ users }}"
+  loop_control:
+    label: "{{ item.username }}"

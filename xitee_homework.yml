@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  gather_facts: false
+  hosts: all
+  become: true
+  roles:
+    - role: xitee_homework
+  vars_files:
+    - vault.yml

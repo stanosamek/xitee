@@ -1,0 +1,30 @@
+---
+
+firewall:
+  - http
+  - ssh
+
+username: xitest
+wordpress_db_name: wordpress
+wordpress_db_user: wordpress_user
+wordpress_db_password: wordpress_password
+mysql_root_password: root_password
+docker_compose_version: "1.29.2"  # Replace with the desired Docker Compose version
+project_dir: /opt/wordpress_docker
+wordpress_db_container_name: mysql
+wordpress_app_container_name: wordpress
+
+packages:
+  - jq
+  - python3-pip
+
+schedule_times:
+  - name: backup01
+    hour: "08"
+    minute: "00"
+  - name: backup02
+    hour: "16"
+    minute: "00"
+  - name: backup03
+    hour: "00"
+    minute: "00"

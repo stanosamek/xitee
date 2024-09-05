@@ -1,0 +1,85 @@
+---
+
+- name: Ensure required packages are installed
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+      - python3-pip
+      - jq
+    state: present
+
+- name: Install and upgrade pip
+  pip:
+    name: pip
+    extra_args: --upgrade
+    executable: pip3
+    state: latest
+
+# - name: Uninstall docker
+#   ansible.builtin.pip:
+#     name: docker
+#     state: absent
+#     executable: pip3
+#   become: true
+
+# - name: Uninstall docker-py
+#   ansible.builtin.pip:
+#     name: docker-py
+#     state: absent
+#     executable: pip3
+#   become: true
+
+- name: Install docker-compose
+  ansible.builtin.pip:
+    name: docker-compose
+    state: latest
+    executable: pip3
+  become: true
+  
+- name: Add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+  become: yes
+
+- name: Install Docker and dependencies
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+  become: true
+
+- name: Start and enable Docker service
+  ansible.builtin.systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Add user to the docker group (optional)
+  ansible.builtin.user:
+    name: "{{ username }}"
+    groups: docker
+    append: yes
+  when: username != 'root'
+
+- name: Ensure Docker is installed and running
+  ansible.builtin.command:
+    cmd: docker --version
+  register: docker_version
+
+- name: Ensure Docker compose is installed and running
+  ansible.builtin.command:
+    cmd: docker compose version 
+  register: docker_compose_version
+
+- name: Display Docker version
+  ansible.builtin.debug:
+    msg: "Docker version installed: {{ docker_version.stdout }}"
+
+- name: Display Docker compose version
+  ansible.builtin.debug:
+    msg: "Docker compose version installed: {{ docker_compose_version.stdout }}"
